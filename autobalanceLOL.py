@@ -1,6 +1,7 @@
 from itertools import product
 import numpy as np
 
+#DEFININDO A CLASSE JOGADOR
 class Player:
     def __init__(self, name, points, int):
         self.name = name
@@ -16,27 +17,24 @@ class Player:
     def getName(self):
         return self.name
 
+#FUNÇÃO QUE RECEBE DUAS LISTAS DE OBJETOS PLAYER E VERIFICA A DIFERENÇA DA SOMA DOS PONTOS DOS OBJETOS DA LISTA
 def medianDiffPlayers(blueTeam, redTeam):
     medianBlue = 0
     medianRed = 0
     for i in blueTeam:
         medianBlue += i.getPoints()
-        #print(i.getPoints())
-    #medianBlue = medianBlue/5
     for i in redTeam:
         medianRed += i.getPoints()
-        #print(i.getPoints())
-    #medianRed = medianRed/5
-    #print(f"medianBlue:{medianBlue}")
-    #print(f"medianRed:{medianRed}")
     return module(medianBlue - medianRed)
 
+#FUNÇÃO QUE FAZ O MÓDULO DE UM NÚMERO
 def module(num):
     if num >= 0:
         return num
     else:
         return num*-1
 
+#FUNÇÃO QUE VERIFICA SE EXISTE UM ELEMENTO REPETIDO NO ELEMENTO DO ARRANJO
 def haveTwice(lista):
     count1 = 0
     count2 = 0
@@ -77,15 +75,18 @@ def haveTwice(lista):
         return True
     return False
 
+#CRIANDO UMA LISTA DE INTEIROS DE 1 ATÉ 10 QUE REPRESENTARÁ OS INTEIROS ASSOCIADOS AOS PLAYERS
 caracteres = [1,2,3,4,5,6,7,8,9,10]
 permsList = []
+#USANDO A FUNÇÃO DO ITERTOOLS PARA OBTER TODOS SO ARRANJOS COM REPETIÇÃO DE 5 ESPAÇOS DE 10 ELEMENTOS DISTINTOS
 genComb = product(caracteres, repeat=5) # aqui e onde tens de especificar o numero de chars que cada combinacao tenha
+#COLOCANDO O RESULTADO DO ARRANJO EM UMA LISTA
 for subset in genComb:
     #print(subset) # tuple retornado com uma combinacao por loop
     permsList.append(subset)
 
-
-
+#VERIFICANDO OS ELEMENTOS DO ARRANJO QUE TEM UM PELO MENOS UM DOS ELEMENTOS REPETIDOS E COLETANDO SEUS INDICES NA LISTA
+#CASO NÃO EXISTA NO MÍNIMO DOIS ELEMENTOS REPETIDOS, OU SEJA, TODOS OS ELEMENTOS SÃO DIFERENTES NO ARRANJO, PEGAMOS SEU INDICE
 indexList = []
 num = 0
 for j in range(len(permsList)):
@@ -94,17 +95,14 @@ for j in range(len(permsList)):
     else:
         indexList.append(j)
 
-#print(indexList)
-#print(f"TAMANHO {len(indexList)}")
-#print(permsList[98765])
-
-
-
+#AO COLOCAR APENAS OS ELEMENTOS DO ARRANJO QUE NÃO TEM ELEMENTO REPETIDO, OBTEMOS A COMBINAÇÃO DE 5 ESPAÇOS DE 10 ELEMENTOS DISTINTOS.
+#A OPERAÇÃO É REALIZADA COLOCANDO OS INDICES COLETADOS QUE SATISFAZEM A CONDIÇÃO EM UMA NOVA LISTA
 newList = []
 for i in indexList:
     newList.append(permsList[i])
-#print(newList)
+permsList.clear()
 
+#CRIANDO OS OBJETOS TIPO PLAYER PARA VERIFICAR TODAS A COMBINAÇÕES POSSÍVEIS POSTERIORMENTE
 player1 = Player("likotrico", 2000.0, 1)
 player2 = Player("maybe god", 1400.0, 2)
 player3 = Player("slottwo", 900.0, 3)
@@ -118,7 +116,7 @@ player8 = Player("mary", 600.0, 8)
 player9 = Player("marco", 500.0, 9)
 player10 = Player("marx", 700.0, 10)
 
-
+#CRIANDO UMA LISTA DE PLAYERS COM OS OBJETOS CRIADOS
 players = []
 players.append(player1)
 players.append(player2)
@@ -130,76 +128,60 @@ players.append(player7)
 players.append(player8)
 players.append(player9)
 players.append(player10)
-#for i in range(1, 11):
-#    players.append(Player(str(i), 10, i))
 
+#VARIÁVEL DA DIFERENÇA SETADA COMO INFINITO. COMO QUEREMOS DOIS TIMES COM A MENOR DIFERENÇA DE PONTOS,
+#O VALOR INICIAL É COLOCADO COMO INFINITO PARA PEGARMOS A PRIMEIRA DIFERENÇA
 mindiff = np.inf
 team = []
 
 for comb in newList:
-    #print(comb)
+    #AQUI VAMO TER UMA LISTA QUE ARMAZENARÁ A LISTA PLAYER, NO CASO A BLUETEAM. DEPOIS, VERIFICANDO OS ELEMENTOS DA COMBINAÇÃO,
+    #VAMOS
     blueTeam = players.copy()
     redTeam = []
     AuxIndexList = []
+    #COLETANDO OS INDICES DA LISTA CUJO INTEIRO DO PLAYER CONDIZ COM OS NUMERO PRESENTE NA COMBINAÇÃO
     for integer in comb:
         for element in range(len(players)):
             if players[element].getInt() == integer:
                 AuxIndexList.append(element)
-
+    #ADICIONANDO OS PLAYERS QUE TEM OS INTEIROS CONDIZENTES COM O ELEMENTO DA COMBINAÇÃO ATUAL
     for i in AuxIndexList:
         redTeam.append(blueTeam[i])
 
+    #REMOVENDO OS ELEMENTOS QUE ESTÃO NO REDTEAM DA LISTA DO BLUETEAM, QUE INICIALMENTE POSSUI TODOS OS PLAYERS
     for i in redTeam:
         for j in blueTeam:
             if i.getInt() == j.getInt():
                 blueTeam.remove(j)
 
-    """IndexListRemove = []
-    for i in range(len(redTeam)):
-        for j in range(len(blueTeam)):
-            if redTeam[i].getInt() == blueTeam[j].getInt():
-                IndexListRemove.append(j)
-    print(IndexListRemove)
-    for i in IndexListRemove:
-        for j in range(len(blueTeam)):
-            if i == j:
-                blueTeam.remove(blueTeam[j])
-                break"""
-
-    #IMPRIMIR OS INT DOS TIMES
-    """print("RED")
-    for i in redTeam:
-        print(i.getInt())
-    print("BLUE")
-    for i in blueTeam:
-        print(i.getInt())"""
+    #REALIZANDO A DIFERENÇA DA SOMA DOS PONTOS DOS TIMES RESULTANTES DA COMBINAÇÃO VERIFICADA
     medianAux = medianDiffPlayers(blueTeam, redTeam)
-    #print(medianAux)
+
+    #SE A COMBINAÇÃO ATUAL RESULTOU EM UMA DIFERENÇA MENOR, ENTÃO É A COMBINAÇÃO QUE DESEJAMOS
+    #SENDO ASSIM, ARMAZENAMOS A NOVA DIFERENÇA E OS TIMES DA COMBINAÇÃO.
     if medianAux < mindiff:
-        print("Entrou")
+        #print("Entrou")
         mindiff = medianAux
         team = redTeam.copy()
         team2 = blueTeam.copy()
 
     redTeam.clear()
     AuxIndexList.clear()
-    #IndexListRemove.clear()
 
-print("Time 1")
-a = 0
-for i in team:
-    a += i.getPoints()
-    print(f"Index:{i.getInt()} / Player:{i.getName()}")
-print(f"Pontos totais:{a}")
-a = 0
-print("Time 2")
-for i in team2:
-    a += i.getPoints()
-    print(f"Index:{i.getInt()} / Player:{i.getName()}")
-print(f"Pontos totais:{a}")
+#MOSTRAR OS TIMES RESULTANTES
+if len(team) == len(team2):
+    a = 0
+    b = 0
+    for i in range(len(team)):
+        a+= team[i].points
+        b+= team2[i].getPoints()
+        print(f"Index:{team[i].getInt()} / Player:{team[i].getName()}\t Index:{team2[i].getInt()} / Player:{team2[i].getName()}")
+    print(f"Pontos totais:\nTime 1:{a}\nTime 2:{b}")
+    print(f"Diferença:{mindiff}")
 
-
-
+else:
+    print("Times com tamanhos diferentes! Um Erro aconteceu")
 
 
 
