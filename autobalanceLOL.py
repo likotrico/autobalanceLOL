@@ -13,6 +13,9 @@ class Player:
     def getPoints(self):
         return self.points
 
+    def getName(self):
+        return self.name
+
 def medianDiffPlayers(blueTeam, redTeam):
     medianBlue = 0
     medianRed = 0
@@ -85,7 +88,7 @@ for subset in genComb:
 
 indexList = []
 num = 0
-for j in range(len(permsList)-1):
+for j in range(len(permsList)):
     if haveTwice(permsList[j]):
         num+=1
     else:
@@ -102,17 +105,18 @@ for i in indexList:
     newList.append(permsList[i])
 #print(newList)
 
-player1 = Player("mary", 500.0, 1)
-player2 = Player("slottwo", 700.0, 2)
-player3 = Player("icaro", 900.0, 3)
-player4 = Player("iago", 1200, 4)
-#player5 = Player("luy", 1200.0, 5)
-player5 = Player("mateus", 2200.0, 5)
-player6 = Player("breno", 1300.0, 6)
-player7 = Player("simoes", 1500.0, 7)
-player8 = Player("felipin", 1600.0, 8)
-player9 = Player("likotrico", 2000.0, 9)
-player10 = Player("leaftime", 2800.0, 10)
+player1 = Player("likotrico", 2000.0, 1)
+player2 = Player("maybe god", 1400.0, 2)
+player3 = Player("slottwo", 900.0, 3)
+player4 = Player("Andere", 1600, 4)
+#player5 = Player("mago tiririca", 900.0, 5)
+player5 = Player("paulo luy", 1400.0, 5)
+player6 = Player("kskuat", 2200.0, 6)
+player7 = Player("leaftime", 2800.0, 7)
+player8 = Player("mary", 600.0, 8)
+#player8 = Player("felipin", 1600.0, 8)
+player9 = Player("marco", 500.0, 9)
+player10 = Player("marx", 700.0, 10)
 
 
 players = []
@@ -138,29 +142,61 @@ for comb in newList:
     redTeam = []
     AuxIndexList = []
     for integer in comb:
-        for element in range(len(players)-1):
+        for element in range(len(players)):
             if players[element].getInt() == integer:
                 AuxIndexList.append(element)
 
     for i in AuxIndexList:
         redTeam.append(blueTeam[i])
+
     for i in redTeam:
         for j in blueTeam:
             if i.getInt() == j.getInt():
                 blueTeam.remove(j)
 
+    """IndexListRemove = []
+    for i in range(len(redTeam)):
+        for j in range(len(blueTeam)):
+            if redTeam[i].getInt() == blueTeam[j].getInt():
+                IndexListRemove.append(j)
+    print(IndexListRemove)
+    for i in IndexListRemove:
+        for j in range(len(blueTeam)):
+            if i == j:
+                blueTeam.remove(blueTeam[j])
+                break"""
+
+    #IMPRIMIR OS INT DOS TIMES
+    """print("RED")
+    for i in redTeam:
+        print(i.getInt())
+    print("BLUE")
+    for i in blueTeam:
+        print(i.getInt())"""
     medianAux = medianDiffPlayers(blueTeam, redTeam)
     #print(medianAux)
     if medianAux < mindiff:
         print("Entrou")
         mindiff = medianAux
         team = redTeam.copy()
+        team2 = blueTeam.copy()
 
     redTeam.clear()
     AuxIndexList.clear()
-for i in team:
-    print(i.getInt())
+    #IndexListRemove.clear()
 
+print("Time 1")
+a = 0
+for i in team:
+    a += i.getPoints()
+    print(f"Index:{i.getInt()} / Player:{i.getName()}")
+print(f"Pontos totais:{a}")
+a = 0
+print("Time 2")
+for i in team2:
+    a += i.getPoints()
+    print(f"Index:{i.getInt()} / Player:{i.getName()}")
+print(f"Pontos totais:{a}")
 
 
 
